@@ -8,10 +8,6 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'], // <— hier!
-  },
-  esbuild: {
-    jsx: 'automatic',
-    include: /\.js$/, // <-- sagt Vite: auch .js als JSX behandeln
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
   },
 });
