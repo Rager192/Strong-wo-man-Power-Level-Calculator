@@ -1,25 +1,19 @@
-import React from 'react';
+import * as React from "react"
 
-const Input = ({ label, value, onChange, type = 'text', placeholder }) => {
+import { cn } from "@/lib/utils"
+
+const Input = React.forwardRef(({ className, type, ...props }, ref) => {
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      {label && <label style={{ display: 'block', marginBottom: '0.3rem' }}>{label}</label>}
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        style={{
-          padding: '0.5rem',
-          borderRadius: '4px',
-          border: '1px solid #ccc',
-          width: '100%',
-          boxSizing: 'border-box',
-        }}
-      />
-    </div>
-  );
-};
+    <input
+      type={type}
+      className={cn(
+        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      ref={ref}
+      {...props} />
+  )
+})
+Input.displayName = "Input"
 
-export default Input;
-
+export { Input }
