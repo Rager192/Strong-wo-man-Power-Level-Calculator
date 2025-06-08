@@ -1,8 +1,7 @@
 import { useState } from "react";
-import Card, { CardContent } from "@/components/ui/card";
-import Input from "@/components/ui/input";
-import Button from "@/components/ui/button";
-
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectTrigger,
@@ -11,7 +10,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 
-// Definierte Standards für Strongman-Events nach Modus, Geschlecht und Gewichtsklasse
+// Defined standards for Strongman events by mode, gender, and weight class
 const standards = {
   natural: {
     male: {
@@ -651,7 +650,7 @@ export default function StrongmanStrengthLevel() {
 
   return (
     <>
-      {/* Das Bildelement */}
+      {/* The image element */}
       <div className="flex justify-center mt-10">
         <img
           src={imageUrl}
@@ -666,13 +665,13 @@ export default function StrongmanStrengthLevel() {
 
       <Card className="max-w-md mx-auto mt-10 p-6">
         <CardContent className="space-y-4">
-          {/* Modus Auswahl */}
+          {/* Mode Selector */}
           <div className="mb-2">
             <Select
               value={mode}
               onValueChange={(value) => {
                 setMode(value);
-                setGender(""); // Untergeordnete Auswahlfelder zurücksetzen
+                setGender(""); // Reset child selectors
                 setWeightClass("");
                 setEvent("");
                 setShowOutput(false);
@@ -680,26 +679,26 @@ export default function StrongmanStrengthLevel() {
               }}
             >
               <SelectTrigger className="w-full border border-gray-300">
-                <SelectValue placeholder={<span className="text-muted-foreground">Modus auswählen</span>} />
+                <SelectValue placeholder={<span className="text-muted-foreground">Select Mode</span>} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="natural">
-                  <span>Natürlich 🥦</span>
+                  <span>Natural 🥦</span>
                 </SelectItem>
                 <SelectItem value="enhanced">
-                  <span>Verbessert 💊</span>
+                  <span>Enhanced 💊</span>
                 </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Geschlechtsauswahl */}
+          {/* Gender Selector */}
           <div className="mb-2">
             <Select
               value={gender}
               onValueChange={(value) => {
                 setGender(value);
-                setWeightClass(""); // Untergeordnete Auswahlfelder zurücksetzen
+                setWeightClass(""); // Reset child selectors
                 setEvent("");
                 setShowOutput(false);
                 setExportData("");
@@ -707,7 +706,7 @@ export default function StrongmanStrengthLevel() {
               disabled={!mode || !standards[mode] || Object.keys(standards[mode]).length === 0}
             >
               <SelectTrigger className="w-full border border-gray-300">
-                <SelectValue placeholder={<span className="text-muted-foreground">{mode ? 'Geschlecht auswählen' : 'Zuerst Modus auswählen'}</span>} />
+                <SelectValue placeholder={<span className="text-muted-foreground">{mode ? 'Select Gender' : 'Select Mode first'}</span>} />
               </SelectTrigger>
               <SelectContent>
                 {mode && standards[mode] && Object.keys(standards[mode]).map(g => (
@@ -717,20 +716,20 @@ export default function StrongmanStrengthLevel() {
             </Select>
           </div>
 
-          {/* Gewichtsklassen Auswahl */}
+          {/* Weight Class Selector */}
           <div className="mb-2">
             <Select
               value={weightClass}
               onValueChange={(value) => {
                 setWeightClass(value);
-                setEvent(""); // Untergeordnete Auswahlfelder zurücksetzen
+                setEvent(""); // Reset child selectors
                 setShowOutput(false);
                 setExportData("");
               }}
               disabled={!gender || !standards[mode]?.[gender] || Object.keys(standards[mode][gender]).length === 0}
             >
               <SelectTrigger className="w-full border border-gray-300">
-                <SelectValue placeholder={<span className="text-muted-foreground">{gender ? 'Gewichtsklasse auswählen' : 'Zuerst Geschlecht auswählen'}</span>} />
+                <SelectValue placeholder={<span className="text-muted-foreground">{gender ? 'Select Weight Class' : 'Select Gender first'}</span>} />
               </SelectTrigger>
               <SelectContent>
                 {mode && gender && standards[mode]?.[gender] && Object.keys(standards[mode][gender]).map(cls => (
@@ -740,7 +739,7 @@ export default function StrongmanStrengthLevel() {
             </Select>
           </div>
 
-          {/* Event Auswahl */}
+          {/* Event Selector */}
           <div className="mb-2">
             <Select
               value={event}
@@ -752,7 +751,7 @@ export default function StrongmanStrengthLevel() {
               disabled={!weightClass || !standards[mode]?.[gender]?.[weightClass] || Object.keys(standards[mode][gender][weightClass]).length === 0}
             >
               <SelectTrigger className="w-full border border-gray-300">
-                <SelectValue placeholder={<span className="text-muted-foreground">{weightClass ? 'Event auswählen' : 'Zuerst Gewichtsklasse auswählen'}</span>} />
+                <SelectValue placeholder={<span className="text-muted-foreground">{weightClass ? 'Select Event' : 'Select Weight Class first'}</span>} />
               </SelectTrigger>
               <SelectContent>
                 {mode && gender && weightClass && standards[mode]?.[gender]?.[weightClass] && Object.keys(standards[mode][gender][weightClass]).map(evt => (
@@ -762,10 +761,10 @@ export default function StrongmanStrengthLevel() {
             </Select>
           </div>
 
-          {/* Eingabefeld für den Wert der Übung */}
+          {/* Input field for lift value */}
           <Input
             type="number"
-            placeholder="Gewicht in kg eingeben"
+            placeholder="Enter your lift in kg"
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
@@ -775,13 +774,13 @@ export default function StrongmanStrengthLevel() {
             className="w-full border border-gray-300"
           />
 
-          {/* Button zur Anzeige des Power Levels */}
+          {/* Button to show power level */}
           <Button
             onClick={handleCheck}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
             disabled={!mode || !gender || !weightClass || !event}
           >
-            Dein Power Level anzeigen
+            Show Your Power Level
           </Button>
 
           {showOutput && level && (
@@ -799,7 +798,7 @@ export default function StrongmanStrengthLevel() {
             </div>
           )}
 
-          {/* Tabelle zur Anzeige der Levelbereiche */}
+          {/* Table to display level ranges */}
           {showOutput && (
             <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
@@ -809,7 +808,7 @@ export default function StrongmanStrengthLevel() {
                       Level
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Bereich ({event})
+                      Range ({event})
                     </th>
                   </tr>
                 </thead>
@@ -835,11 +834,10 @@ export default function StrongmanStrengthLevel() {
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4"
             disabled={!mode || !gender || !weightClass}
           >
-            Alle Power Levels exportieren
+            Export All Power Levels
           </Button>
         </CardContent>
       </Card>
     </>
   );
 }
-
