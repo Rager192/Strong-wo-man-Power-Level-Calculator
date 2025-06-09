@@ -447,7 +447,7 @@ const levels = ["Beginner", "Novice", "Intermediate", "Advanced", "Elite"];
 
 export default function StrongmanStrengthLevel() {
   // The URL for your uploaded image
-  const imageUrl = 'https://i.ibb.co/b5WWM1Qj/Gemini-Generated-Image-tzmgohtzmgohtzmg.jpg';
+  const imageUrl = 'https://i.ibb.co/Kz6K61nB/fce8ca57-655f-485d-bd37-870554a12f3d.png';
 
   // --- Initializing states without default selection ---
   const [mode, setMode] = useState(""); // Set to empty string for no initial selection
