@@ -16,7 +16,7 @@ const standards = {
     male: {
       U72: {
         "Deadlift": [170, 200, 220, 245],
-        "Log Press": [75, 90, 100, 110],
+        "Log Press": [70, 90, 100, 110], // Wert aus dem neuesten Immersive übernommen
         "Axle Press": [80, 90, 100, 110],
         "Yoke Walk (10m)": [200, 240, 280, 330],
         "Atlas Stone (1.2m)": [70, 90, 110, 130],
@@ -73,7 +73,7 @@ const standards = {
       },
       U105: {
         "Deadlift": [200, 255, 275, 300],
-        "Log Press": [100, 115, 125, 135],
+        "Log Press": [90, 110, 125, 135], // Wert aus dem neuesten Immersive übernommen
         "Axle Press": [100, 115, 125, 140],
         "Yoke Walk (10m)": [240, 300, 340, 400],
         "Atlas Stone (1.2m)": [100, 130, 150, 170],
@@ -92,7 +92,7 @@ const standards = {
       },
       Open: {
         "Deadlift": [220, 270, 290, 320],
-        "Log Press": [90, 110, 130, 150],
+        "Log Press": [95, 115, 130, 150], // Wert aus dem neuesten Immersive übernommen
         "Axle Press": [80, 105, 125, 145],
         "Yoke Walk (10m)": [230, 300, 350, 420],
         "Atlas Stone (1.2m)": [110, 140, 160, 180],
@@ -161,7 +161,7 @@ const standards = {
         "Power Stairs": [100, 120, 135, 150],
         "Sandbag to Shoulder": [55, 65, 80, 90],
         "Car Deadlift": [170, 200, 225, 250],
-        "Tire Flip": [120, 140, 160, 175],
+        "Tire Flip": [145, 170, 190, 210],
         "Loading Race": [60, 75, 85, 95],
         "Farmers Hold": [60, 75, 85, 95],
         "Natural Stone Press": [35, 45, 55, 60],
@@ -447,13 +447,13 @@ const levels = ["Beginner", "Novice", "Intermediate", "Advanced", "Elite"];
 
 export default function StrongmanStrengthLevel() {
   // The URL for your uploaded image
-  const imageUrl = 'https://i.ibb.co/p799WVD/Chat-GPT-Image-Jun-10-2025-12-12-38-AM.png';
+  const imageUrl = 'https://i.ibb.co/p799WVD/Chat-GPT-Image-Jun-10-2025-12-12-38-AM.png'; // Bildlink aktualisiert
 
   // --- Initializing states without default selection ---
-  const [mode, setMode] = useState(""); // Set to empty string for no initial selection
-  const [gender, setGender] = useState(""); // Set to empty string for no initial selection
-  const [weightClass, setWeightClass] = useState(""); // Set to empty string for no initial selection
-  const [event, setEvent] = useState(""); // Set to empty string for no initial selection
+  const [mode, setMode] = useState("");
+  const [gender, setGender] = useState("");
+  const [weightClass, setWeightClass] = useState("");
+  const [event, setEvent] = useState("");
   const [input, setInput] = useState("");
   const [level, setLevel] = useState("");
   const [showOutput, setShowOutput] = useState(false);
@@ -505,6 +505,63 @@ export default function StrongmanStrengthLevel() {
     Unranked: "bg-red-100 text-red-800",
     "Mental Beginner (pls use valid number)": "bg-red-100 text-red-800"
   };
+
+  // Improved handlers for dropdown changes to persist valid selections
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+    setShowOutput(false);
+    setExportData("");
+
+    // Check if the currently selected gender exists in the new mode
+    const currentGendersInNewMode = standards[newMode] ? Object.keys(standards[newMode]) : [];
+    if (gender && !currentGendersInNewMode.includes(gender)) {
+      setGender("");
+      setWeightClass("");
+      setEvent("");
+    } else if (gender) { // If gender is still valid, check weight class and event
+      const currentWeightClassesInNewGender = standards[newMode]?.[gender] ? Object.keys(standards[newMode][gender]) : [];
+      if (weightClass && !currentWeightClassesInNewGender.includes(weightClass)) {
+        setWeightClass("");
+        setEvent("");
+      } else if (weightClass) { // If weightClass is still valid, check event
+        const currentEventsInNewWeightClass = standards[newMode]?.[gender]?.[weightClass] ? Object.keys(standards[newMode][gender][weightClass]) : [];
+        if (event && !currentEventsInNewWeightClass.includes(event)) {
+          setEvent("");
+        }
+      }
+    }
+  };
+
+  const handleGenderChange = (newGender) => {
+    setGender(newGender);
+    setShowOutput(false);
+    setExportData("");
+
+    // Check if the currently selected weight class exists in the new gender
+    const currentWeightClassesInNewGender = standards[mode]?.[newGender] ? Object.keys(standards[mode][newGender]) : [];
+    if (weightClass && !currentWeightClassesInNewGender.includes(weightClass)) {
+      setWeightClass("");
+      setEvent("");
+    } else if (weightClass) { // If weightClass is still valid, check event
+      const currentEventsInNewWeightClass = standards[mode]?.[newGender]?.[weightClass] ? Object.keys(standards[mode][newGender][weightClass]) : [];
+      if (event && !currentEventsInNewWeightClass.includes(event)) {
+        setEvent("");
+      }
+    }
+  };
+
+  const handleWeightClassChange = (newWeightClass) => {
+    setWeightClass(newWeightClass);
+    setShowOutput(false);
+    setExportData("");
+
+    // Check if the currently selected event exists in the new weight class
+    const currentEventsInNewWeightClass = standards[mode]?.[gender]?.[newWeightClass] ? Object.keys(standards[mode][gender][newWeightClass]) : [];
+    if (event && !currentEventsInNewWeightClass.includes(event)) {
+      setEvent("");
+    }
+  };
+
 
   const handleCheck = () => {
     if (input.trim() === "") {
@@ -655,13 +712,22 @@ export default function StrongmanStrengthLevel() {
         <img
           src={imageUrl}
           alt="Anime character in DBZ style with Dragon Ball"
-          style={{ width: '200px', height: '200px' }}
+          style={{ width: '250px', height: '250px' }} // Bildgröße aktualisiert
         />
       </div>
 
-      <p className="mt-4 text-lg font-semibold text-gray-800 text-center">
-        Strong(wo)man Power Level - v0.49 Beta
+      <p className="mt-4 text-2xl font-bold text-blue-800 text-center"> {/* Titel-Stil aktualisiert */}
+        Power Level Calculator
       </p>
+      <p className="text-xl font-bold text-gray-800 text-center leading-tight"> {/* leading-tight für engere Zeile */}
+        <span className="text-green-500">Strong</span>
+        <span className="text-black px-1 rounded-md ml-1">(wo)</span> {/* Textfarbe auf Schwarz, Hintergrund auf Weiß, Ränder und Abstand hinzugefügt */}
+        <span className="text-orange-500">man</span> Edition
+      </p>
+      <p className="text-xs text-gray-600 text-center -mt-2 mb-4"> {/* Versionstext-Stil aktualisiert */}
+        v0.53 Beta {/* Versionstext aktualisiert */}
+      </p>
+
 
       <Card className="max-w-md mx-auto mt-10 p-6">
         <CardContent className="space-y-4">
@@ -669,21 +735,14 @@ export default function StrongmanStrengthLevel() {
           <div className="mb-2">
             <Select
               value={mode}
-              onValueChange={(value) => {
-                setMode(value);
-                setGender(""); // Reset child selectors
-                setWeightClass("");
-                setEvent("");
-                setShowOutput(false);
-                setExportData("");
-              }}
+              onValueChange={handleModeChange} // Neuen Handler verwenden
             >
               <SelectTrigger className="w-full border border-gray-300">
                 <SelectValue placeholder={<span className="text-muted-foreground">Select Mode</span>} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="natural">
-                  <span>Natural 🥦</span>
+                  <span>Natural 🌱</span> {/* Brokkoli-Emoji ersetzt */}
                 </SelectItem>
                 <SelectItem value="enhanced">
                   <span>Enhanced 💊</span>
@@ -696,13 +755,7 @@ export default function StrongmanStrengthLevel() {
           <div className="mb-2">
             <Select
               value={gender}
-              onValueChange={(value) => {
-                setGender(value);
-                setWeightClass(""); // Reset child selectors
-                setEvent("");
-                setShowOutput(false);
-                setExportData("");
-              }}
+              onValueChange={handleGenderChange} // Neuen Handler verwenden
               disabled={!mode || !standards[mode] || Object.keys(standards[mode]).length === 0}
             >
               <SelectTrigger className="w-full border border-gray-300">
@@ -720,12 +773,7 @@ export default function StrongmanStrengthLevel() {
           <div className="mb-2">
             <Select
               value={weightClass}
-              onValueChange={(value) => {
-                setWeightClass(value);
-                setEvent(""); // Reset child selectors
-                setShowOutput(false);
-                setExportData("");
-              }}
+              onValueChange={handleWeightClassChange} // Neuen Handler verwenden
               disabled={!gender || !standards[mode]?.[gender] || Object.keys(standards[mode][gender]).length === 0}
             >
               <SelectTrigger className="w-full border border-gray-300">
